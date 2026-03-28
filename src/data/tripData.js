@@ -78,8 +78,16 @@ export const DAYS = [
   },
   {
     id: 'day-2',
+    date: '2026-05-08',
+    label: 'Arrive Sydney',
+    locationId: 'syd',
+    flights: [],
+    activities: [],
+  },
+  {
+    id: 'day-3',
     date: '2026-05-09',
-    label: 'Sydney — Arrive & Explore',
+    label: 'Sydney — Explore',
     locationId: 'syd',
     flights: [],
     activities: [
@@ -96,7 +104,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-3',
+    id: 'day-4',
     date: '2026-05-10',
     label: 'Fly to Launceston — Cataract Gorge & Truffle Farm',
     locationId: 'lst',
@@ -135,7 +143,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-4',
+    id: 'day-5',
     date: '2026-05-11',
     label: 'Sheffield Murals & Cradle Mountain',
     locationId: 'lst',
@@ -164,7 +172,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-5',
+    id: 'day-6',
     date: '2026-05-12',
     label: 'Ross → Freycinet National Park → Swansea',
     locationId: 'swn',
@@ -203,7 +211,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-6',
+    id: 'day-7',
     date: '2026-05-13',
     label: 'Drive to Hobart — Bonorong & MONA',
     locationId: 'hbt',
@@ -242,7 +250,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-7',
+    id: 'day-8',
     date: '2026-05-14',
     label: 'Richmond & Tasman Peninsula',
     locationId: 'hbt',
@@ -271,7 +279,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-8',
+    id: 'day-9',
     date: '2026-05-15',
     label: 'Mount Wellington & Bruny Island',
     locationId: 'hbt',
@@ -300,7 +308,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-9',
+    id: 'day-10',
     date: '2026-05-16',
     label: 'Salamanca Market → Fly to Melbourne',
     locationId: 'mel',
@@ -369,7 +377,7 @@ export const DAYS = [
     ],
   },
   {
-    id: 'day-10',
+    id: 'day-11',
     date: '2026-05-17',
     label: 'Fly Home — Melbourne to Hong Kong',
     locationId: 'mel',

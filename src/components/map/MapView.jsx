@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { MapContainer, TileLayer, CircleMarker, Popup, Marker } from 'react-leaflet';
+import { useEffect } from 'react';
+import { MapContainer, TileLayer, CircleMarker, Popup, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { LOCATIONS, DAYS } from '../../data/tripData.js';
 import LocationPopup from './LocationPopup.jsx';
@@ -23,16 +23,19 @@ const activityMarkers = DAYS.flatMap((d) =>
     .map((a) => ({ ...a, dayLabel: d.label }))
 );
 
-export default function MapView({ mapTarget, onMapTargetConsumed }) {
-  const mapRef = useRef(null);
-
+// Must be rendered inside MapContainer so useMap() has access to the map instance
+function FlyToTarget({ mapTarget, onConsumed }) {
+  const map = useMap();
   useEffect(() => {
-    if (mapTarget && mapRef.current) {
-      mapRef.current.flyTo([mapTarget.lat, mapTarget.lng], mapTarget.zoom, { duration: 1.2 });
-      onMapTargetConsumed();
+    if (mapTarget) {
+      map.flyTo([mapTarget.lat, mapTarget.lng], mapTarget.zoom, { duration: 1.2 });
+      onConsumed();
     }
   }, [mapTarget]);
+  return null;
+}
 
+export default function MapView({ mapTarget, onMapTargetConsumed }) {
   return (
     <div className="pt-4">
       {/* City quick-jump buttons */}
@@ -40,7 +43,7 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
         {LOCATIONS.map((loc) => (
           <button
             key={loc.id}
-            onClick={() => mapRef.current?.flyTo([loc.lat, loc.lng], 10, { duration: 1.2 })}
+            id={`map-btn-${loc.id}`}
             className="text-xs font-medium px-3 py-1 rounded-full text-white transition-opacity hover:opacity-80"
             style={{ backgroundColor: loc.color }}
           >
@@ -55,12 +58,17 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
           center={[-40.5, 147.0]}
           zoom={6}
           style={{ height: '100%', width: '100%' }}
-          ref={mapRef}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
+
+          {/* Fly to location when triggered from itinerary */}
+          <FlyToTarget mapTarget={mapTarget} onConsumed={onMapTargetConsumed} />
+
+          {/* City quick-jump handler — wires buttons outside MapContainer to flyTo */}
+          <CityButtons />
 
           {/* City pins */}
           {LOCATIONS.map((loc) => (
@@ -104,4 +112,18 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
       </div>
     </div>
   );
+}
+
+// Wires the city buttons (rendered outside MapContainer) to flyTo via DOM events
+function CityButtons() {
+  const map = useMap();
+  useEffect(() => {
+    LOCATIONS.forEach((loc) => {
+      const btn = document.getElementById(`map-btn-${loc.id}`);
+      if (btn) {
+        btn.onclick = () => map.flyTo([loc.lat, loc.lng], 10, { duration: 1.2 });
+      }
+    });
+  }, [map]);
+  return null;
 }
