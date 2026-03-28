@@ -11,9 +11,6 @@ const TYPE_META = {
 export default function ActivityItem({ activity, onShowOnMap }) {
   const meta = TYPE_META[activity.type] || TYPE_META.free;
   const hasLocation = activity.lat && activity.lng;
-  const googleMapsUrl = hasLocation
-    ? `https://www.google.com/maps?q=${activity.lat},${activity.lng}`
-    : null;
 
   return (
     <div className="flex items-start gap-3 py-2">
@@ -44,23 +41,13 @@ export default function ActivityItem({ activity, onShowOnMap }) {
             )}
           </div>
           {hasLocation && (
-            <div className="flex items-center gap-1 flex-shrink-0 mt-0.5">
-              <button
-                onClick={() => onShowOnMap({ lat: activity.lat, lng: activity.lng, zoom: 15, label: activity.name })}
-                title="Show on map"
-                className="text-slate-400 hover:text-blue-500 transition-colors p-1 rounded"
-              >
-                📍
-              </button>
-              <a
-                href={googleMapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-blue-500 hover:text-blue-700 transition-colors whitespace-nowrap"
-              >
-                Maps
-              </a>
-            </div>
+            <button
+              onClick={() => onShowOnMap({ lat: activity.lat, lng: activity.lng, zoom: 15, label: activity.name })}
+              title="Show on map"
+              className="flex items-center gap-1 flex-shrink-0 mt-0.5 text-blue-500 hover:text-blue-700 active:text-blue-800 transition-colors px-2 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-xs font-medium"
+            >
+              📍 Map
+            </button>
           )}
         </div>
       </div>

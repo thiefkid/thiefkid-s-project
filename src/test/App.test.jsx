@@ -13,7 +13,8 @@ describe('App — itinerary → map navigation', () => {
 
   it('switches to map tab when the Map tab button is clicked', async () => {
     render(<App />);
-    await userEvent.click(screen.getByRole('button', { name: /map/i }));
+    // Click the Map tab button (has 🗺️ emoji prefix, distinct from 📍 Map buttons)
+    await userEvent.click(screen.getByRole('button', { name: /🗺️/ }));
     expect(screen.getByTestId('map-container')).toBeInTheDocument();
   });
 

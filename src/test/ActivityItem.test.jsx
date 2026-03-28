@@ -27,19 +27,18 @@ const activityWithoutLocation = {
 };
 
 describe('ActivityItem', () => {
-  it('shows 📍 button and Maps link when activity has lat/lng', () => {
+  it('shows Map button when activity has lat/lng', () => {
     render(<ActivityItem activity={activityWithLocation} onShowOnMap={vi.fn()} />);
     expect(screen.getByTitle('Show on map')).toBeInTheDocument();
-    expect(screen.getByText('Maps')).toBeInTheDocument();
+    expect(screen.getByText(/Map/)).toBeInTheDocument();
   });
 
-  it('hides 📍 button when activity has no lat/lng', () => {
+  it('hides Map button when activity has no lat/lng', () => {
     render(<ActivityItem activity={activityWithoutLocation} onShowOnMap={vi.fn()} />);
     expect(screen.queryByTitle('Show on map')).not.toBeInTheDocument();
-    expect(screen.queryByText('Maps')).not.toBeInTheDocument();
   });
 
-  it('calls onShowOnMap with correct lat/lng when 📍 is clicked', async () => {
+  it('calls onShowOnMap with correct lat/lng when Map button is clicked', async () => {
     const onShowOnMap = vi.fn();
     render(<ActivityItem activity={activityWithLocation} onShowOnMap={onShowOnMap} />);
 
@@ -54,13 +53,11 @@ describe('ActivityItem', () => {
     });
   });
 
-  it('Google Maps link points to correct coordinates', () => {
+  it('does NOT have a direct Google Maps link in itinerary (only in map popup)', () => {
     render(<ActivityItem activity={activityWithLocation} onShowOnMap={vi.fn()} />);
-    const link = screen.getByText('Maps').closest('a');
-    expect(link).toHaveAttribute(
-      'href',
-      'https://www.google.com/maps?q=-41.4411,147.1279'
-    );
-    expect(link).toHaveAttribute('target', '_blank');
+    // No <a> tag linking to Google Maps — that link lives in the Map tab popup only
+    const links = screen.queryAllByRole('link');
+    const googleMapsLinks = links.filter(l => l.href?.includes('google.com/maps'));
+    expect(googleMapsLinks).toHaveLength(0);
   });
 });
