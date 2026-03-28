@@ -31,6 +31,9 @@ export default function ActivityItem({ activity, onShowOnMap }) {
                 <span className="text-xs text-slate-400">{activity.duration}</span>
               )}
             </div>
+            {activity.address && (
+              <p className="text-xs text-slate-400 mt-0.5 font-mono">{activity.address}</p>
+            )}
             {activity.notes && (
               <p className="text-xs text-slate-500 mt-0.5 whitespace-pre-line">{activity.notes}</p>
             )}

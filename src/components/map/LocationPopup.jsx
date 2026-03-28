@@ -38,20 +38,24 @@ export default function LocationPopup({ location }) {
       {activities.length > 5 && (
         <div style={{ color: '#94a3b8', fontSize: 11, marginBottom: 6 }}>+{activities.length - 5} more</div>
       )}
-      <a
-        href={googleMapsUrl}
+      <button
+        onClick={() => { window.location.href = googleMapsUrl; }}
         style={{
           display: 'block',
+          width: '100%',
+          textAlign: 'left',
           marginTop: 8,
-          padding: '4px 0',
+          padding: '6px 0',
           color: '#3b82f6',
           fontSize: 12,
+          background: 'none',
+          border: 'none',
           borderTop: '1px solid #e2e8f0',
-          paddingTop: 8,
+          cursor: 'pointer',
         }}
       >
         📍 Open in Google Maps
-      </a>
+      </button>
     </div>
   );
 }

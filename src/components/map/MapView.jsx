@@ -89,23 +89,19 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
             </CircleMarker>
           ))}
 
-          {/* Activity markers */}
-          {activityMarkers.map((act) => (
-            <Marker key={act.id} position={[act.lat, act.lng]}>
-              <Popup>
-                <div style={{ fontSize: 13 }}>
-                  <div style={{ fontWeight: 600, marginBottom: 2 }}>{act.name}</div>
-                  <div style={{ color: '#64748b', fontSize: 11, marginBottom: 6 }}>{act.dayLabel}</div>
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.name)}`}
-                    style={{ color: '#3b82f6', fontSize: 12 }}
-                  >
-                    📍 Open in Google Maps
-                  </a>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+          {/* Activity markers — tap goes directly to Google Maps (most reliable on iOS) */}
+          {activityMarkers.map((act) => {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.address || act.name)}`;
+            return (
+              <Marker
+                key={act.id}
+                position={[act.lat, act.lng]}
+                eventHandlers={{
+                  click: () => { window.location.href = mapsUrl; },
+                }}
+              />
+            );
+          })}
         </MapContainer>
       </div>
     </div>

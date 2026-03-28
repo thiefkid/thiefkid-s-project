@@ -29,11 +29,16 @@ export default function Header() {
         <p className="text-blue-100 text-sm mt-1">
           {format(start, 'dd MMM')} – {format(end, 'dd MMM yyyy')} · {totalDays} days
         </p>
-        {countdown && (
-          <span className="inline-block mt-2 bg-white/20 text-white text-xs font-medium px-3 py-1 rounded-full">
-            {countdown}
+        <div className="flex items-center gap-2 flex-wrap mt-2">
+          {countdown && (
+            <span className="bg-white/20 text-white text-xs font-medium px-3 py-1 rounded-full">
+              {countdown}
+            </span>
+          )}
+          <span className="bg-white/10 text-white/70 text-xs px-2 py-1 rounded-full font-mono">
+            Built {new Date(__BUILD_TIME__).toLocaleString('en-AU', { timeZone: 'Asia/Hong_Kong', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })} HKT
           </span>
-        )}
+        </div>
       </div>
     </div>
   );
