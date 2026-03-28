@@ -97,7 +97,7 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
                   <div style={{ fontWeight: 600, marginBottom: 2 }}>{act.name}</div>
                   <div style={{ color: '#64748b', fontSize: 11, marginBottom: 6 }}>{act.dayLabel}</div>
                   <a
-                    href={`https://www.google.com/maps?q=${act.lat},${act.lng}`}
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(act.name)}`}
                     style={{ color: '#3b82f6', fontSize: 12 }}
                   >
                     📍 Open in Google Maps

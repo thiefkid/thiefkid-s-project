@@ -6,7 +6,7 @@ export default function LocationPopup({ location }) {
   // Find accommodations whose check-in date falls within this location's days
   const hotels = ACCOMMODATIONS.filter((a) => dayDates.has(a.checkIn));
   const activities = days.flatMap((d) => d.activities).filter((a) => a.name);
-  const googleMapsUrl = `https://www.google.com/maps?q=${location.lat},${location.lng}`;
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location.name)}`;
 
   return (
     <div style={{ minWidth: 180, maxWidth: 260, fontSize: 13 }}>
