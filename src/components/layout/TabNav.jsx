@@ -2,6 +2,7 @@ const TABS = [
   { id: 'itinerary', label: 'Itinerary', icon: '📅' },
   { id: 'map', label: 'Map', icon: '🗺️' },
   { id: 'packing', label: 'Packing', icon: '🎒' },
+  { id: 'vote', label: 'Vote', icon: '🗳️' },
 ];
 
 export default function TabNav({ activeTab, setActiveTab }) {

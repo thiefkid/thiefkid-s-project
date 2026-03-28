@@ -4,6 +4,7 @@ import TabNav from './components/layout/TabNav.jsx';
 import ItineraryView from './components/itinerary/ItineraryView.jsx';
 import MapView from './components/map/MapView.jsx';
 import PackingView from './components/packing/PackingView.jsx';
+import VoteView from './components/vote/VoteView.jsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('itinerary');
@@ -31,6 +32,7 @@ export default function App() {
           />
         )}
         {activeTab === 'packing' && <PackingView />}
+        {activeTab === 'vote' && <VoteView />}
       </main>
     </div>
   );
