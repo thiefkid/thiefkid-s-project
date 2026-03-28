@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, Marker } from 'react-leaflet';
 import L from 'leaflet';
 import { LOCATIONS, DAYS } from '../../data/tripData.js';
@@ -23,8 +23,15 @@ const activityMarkers = DAYS.flatMap((d) =>
     .map((a) => ({ ...a, dayLabel: d.label }))
 );
 
-export default function MapView() {
+export default function MapView({ mapTarget, onMapTargetConsumed }) {
   const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (mapTarget && mapRef.current) {
+      mapRef.current.flyTo([mapTarget.lat, mapTarget.lng], mapTarget.zoom, { duration: 1.2 });
+      onMapTargetConsumed();
+    }
+  }, [mapTarget]);
 
   return (
     <div className="pt-4">
@@ -80,7 +87,15 @@ export default function MapView() {
               <Popup>
                 <div style={{ fontSize: 13 }}>
                   <div style={{ fontWeight: 600, marginBottom: 2 }}>{act.name}</div>
-                  <div style={{ color: '#64748b', fontSize: 11 }}>{act.dayLabel}</div>
+                  <div style={{ color: '#64748b', fontSize: 11, marginBottom: 6 }}>{act.dayLabel}</div>
+                  <a
+                    href={`https://www.google.com/maps?q=${act.lat},${act.lng}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: '#3b82f6', fontSize: 12 }}
+                  >
+                    📍 Open in Google Maps
+                  </a>
                 </div>
               </Popup>
             </Marker>

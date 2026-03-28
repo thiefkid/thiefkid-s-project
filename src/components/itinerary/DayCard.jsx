@@ -5,7 +5,7 @@ import FlightSegment from './FlightSegment.jsx';
 import HotelCard from './HotelCard.jsx';
 import ActivityItem from './ActivityItem.jsx';
 
-export default function DayCard({ day, dayNumber, defaultOpen }) {
+export default function DayCard({ day, dayNumber, defaultOpen, onShowOnMap }) {
   const [open, setOpen] = useState(defaultOpen);
 
   const location = LOCATIONS.find((l) => l.id === day.locationId);
@@ -66,7 +66,7 @@ export default function DayCard({ day, dayNumber, defaultOpen }) {
           ))}
           {day.hotel && <HotelCard hotel={day.hotel} />}
           {day.activities.map((a) => (
-            <ActivityItem key={a.id} activity={a} />
+            <ActivityItem key={a.id} activity={a} onShowOnMap={onShowOnMap} />
           ))}
         </div>
       )}

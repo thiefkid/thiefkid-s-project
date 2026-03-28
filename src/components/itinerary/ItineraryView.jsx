@@ -2,13 +2,12 @@ import { parseISO, isPast, isToday } from 'date-fns';
 import { DAYS } from '../../data/tripData.js';
 import DayCard from './DayCard.jsx';
 
-export default function ItineraryView() {
+export default function ItineraryView({ onShowOnMap }) {
   return (
     <div className="pt-4 space-y-3">
       {DAYS.map((day, i) => {
         const date = parseISO(day.date);
         const isPastDay = !isToday(date) && isPast(date);
-        // Past days collapsed, current and future open
         const defaultOpen = !isPastDay;
         return (
           <DayCard
@@ -16,6 +15,7 @@ export default function ItineraryView() {
             day={day}
             dayNumber={i + 1}
             defaultOpen={defaultOpen}
+            onShowOnMap={onShowOnMap}
           />
         );
       })}

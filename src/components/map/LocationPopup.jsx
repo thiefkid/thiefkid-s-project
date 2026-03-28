@@ -7,6 +7,7 @@ export default function LocationPopup({ location }) {
     .map((d) => d.hotel)
     .filter((h, i, arr) => arr.findIndex((x) => x.id === h.id) === i);
   const activities = days.flatMap((d) => d.activities).filter((a) => a.name);
+  const googleMapsUrl = `https://www.google.com/maps?q=${location.lat},${location.lng}`;
 
   return (
     <div style={{ minWidth: 180, maxWidth: 260, fontSize: 13 }}>
@@ -35,8 +36,24 @@ export default function LocationPopup({ location }) {
         </div>
       ))}
       {activities.length > 5 && (
-        <div style={{ color: '#94a3b8', fontSize: 11 }}>+{activities.length - 5} more</div>
+        <div style={{ color: '#94a3b8', fontSize: 11, marginBottom: 6 }}>+{activities.length - 5} more</div>
       )}
+      <a
+        href={googleMapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'block',
+          marginTop: 8,
+          padding: '4px 0',
+          color: '#3b82f6',
+          fontSize: 12,
+          borderTop: '1px solid #e2e8f0',
+          paddingTop: 8,
+        }}
+      >
+        📍 Open in Google Maps
+      </a>
     </div>
   );
 }

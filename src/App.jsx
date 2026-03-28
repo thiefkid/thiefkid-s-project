@@ -7,6 +7,12 @@ import PackingView from './components/packing/PackingView.jsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('itinerary');
+  const [mapTarget, setMapTarget] = useState(null);
+
+  const handleShowOnMap = ({ lat, lng, zoom = 15, label }) => {
+    setMapTarget({ lat, lng, zoom, label });
+    setActiveTab('map');
+  };
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -17,8 +23,13 @@ export default function App() {
         </div>
       </div>
       <main className="max-w-2xl mx-auto px-4 pb-8">
-        {activeTab === 'itinerary' && <ItineraryView />}
-        {activeTab === 'map' && <MapView />}
+        {activeTab === 'itinerary' && <ItineraryView onShowOnMap={handleShowOnMap} />}
+        {activeTab === 'map' && (
+          <MapView
+            mapTarget={mapTarget}
+            onMapTargetConsumed={() => setMapTarget(null)}
+          />
+        )}
         {activeTab === 'packing' && <PackingView />}
       </main>
     </div>
