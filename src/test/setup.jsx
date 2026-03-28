@@ -21,7 +21,15 @@ vi.mock('react-leaflet', () => ({
   TileLayer: () => null,
   CircleMarker: ({ children }) => <div>{children}</div>,
   Popup: ({ children }) => <div>{children}</div>,
-  Marker: ({ children }) => <div>{children}</div>,
+  Marker: ({ children, title, eventHandlers }) => (
+    <div
+      data-testid="map-marker"
+      data-marker-title={title}
+      onClick={eventHandlers?.click}
+    >
+      {children}
+    </div>
+  ),
   useMap: () => ({ flyTo: mockFlyTo }),
 }));
 

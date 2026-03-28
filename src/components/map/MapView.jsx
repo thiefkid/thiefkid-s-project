@@ -101,6 +101,7 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
             return (
               <Marker
                 key={acc.id}
+                title={acc.name}
                 position={[acc.lat, acc.lng]}
                 icon={icon}
                 eventHandlers={{
@@ -116,6 +117,7 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
             return (
               <Marker
                 key={act.id}
+                title={act.name}
                 position={[act.lat, act.lng]}
                 eventHandlers={{
                   click: () => { window.location.href = mapsUrl; },
