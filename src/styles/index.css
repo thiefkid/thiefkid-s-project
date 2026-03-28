@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* Leaflet z-index fixes */
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+  z-index: auto;
+}
+.leaflet-control {
+  z-index: 800;
+}
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 1000;
+}
