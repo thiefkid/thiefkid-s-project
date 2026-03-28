@@ -81,8 +81,8 @@ export default function DayCard({ day, dayNumber, defaultOpen, onShowOnMap }) {
               hotel={accommodation}
               isCheckIn={isCheckIn}
               onShowOnMap={onShowOnMap}
-              lat={location?.lat}
-              lng={location?.lng}
+              lat={accommodation.lat}
+              lng={accommodation.lng}
             />
           )}
         </div>

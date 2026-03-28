@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { LOCATIONS, DAYS } from '../../data/tripData.js';
+import { LOCATIONS, DAYS, ACCOMMODATIONS } from '../../data/tripData.js';
 import LocationPopup from './LocationPopup.jsx';
 
 // Fix Leaflet default marker icon paths (broken with Vite bundling)
@@ -88,6 +88,27 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
               </Popup>
             </CircleMarker>
           ))}
+
+          {/* Accommodation markers — 🏠 tap goes directly to Google Maps */}
+          {ACCOMMODATIONS.filter((a) => a.lat && a.lng).map((acc) => {
+            const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(acc.address)}`;
+            const icon = L.divIcon({
+              html: '🏠',
+              className: '',
+              iconSize: [24, 24],
+              iconAnchor: [12, 12],
+            });
+            return (
+              <Marker
+                key={acc.id}
+                position={[acc.lat, acc.lng]}
+                icon={icon}
+                eventHandlers={{
+                  click: () => { window.location.href = mapsUrl; },
+                }}
+              />
+            );
+          })}
 
           {/* Activity markers — tap goes directly to Google Maps (most reliable on iOS) */}
           {activityMarkers.map((act) => {

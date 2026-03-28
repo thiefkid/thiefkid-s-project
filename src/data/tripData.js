@@ -8,6 +8,8 @@ export const ACCOMMODATIONS = [
     checkIn: '2026-05-08',
     checkOut: '2026-05-10',
     notes: 'Check-in time 3pm',
+    lat: -33.8791,
+    lng: 151.1983,
   },
   {
     id: 'acc-lst',
@@ -16,6 +18,8 @@ export const ACCOMMODATIONS = [
     checkIn: '2026-05-10',
     checkOut: '2026-05-12',
     notes: null,
+    lat: -41.4689,
+    lng: 147.1610,
   },
   {
     id: 'acc-swn',
@@ -24,6 +28,8 @@ export const ACCOMMODATIONS = [
     checkIn: '2026-05-12',
     checkOut: '2026-05-13',
     notes: null,
+    lat: -42.1255,
+    lng: 148.0755,
   },
   {
     id: 'acc-hbt',
@@ -32,6 +38,8 @@ export const ACCOMMODATIONS = [
     checkIn: '2026-05-13',
     checkOut: '2026-05-16',
     notes: null,
+    lat: -42.8047,
+    lng: 147.2679,
   },
   {
     id: 'acc-mel',
@@ -40,6 +48,8 @@ export const ACCOMMODATIONS = [
     checkIn: '2026-05-16',
     checkOut: '2026-05-17',
     notes: null,
+    lat: null,  // No specific address confirmed — add once you know the hotel
+    lng: null,
   },
 ];
 
@@ -93,14 +103,14 @@ export const DAYS = [
     activities: [
       {
         id: 'act-syd-1',
-        name: 'Paddy\'s Markets',
+        name: 'Sydney Saturday Market',
         type: 'activity',
         time: null,
         duration: null,
-        notes: 'Open Sat–Sun. Corner of Thomas St & Hay St, Haymarket — 10 min walk from Ultimo Airbnb.',
-        address: '9-13 Hay St, Haymarket NSW 2000',
-        lat: -33.8790,
-        lng: 151.2044,
+        notes: null,
+        address: null,
+        lat: null,
+        lng: null,
       },
     ],
   },
