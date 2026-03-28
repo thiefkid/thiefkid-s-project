@@ -5,7 +5,7 @@ export const ACCOMMODATIONS = [
     id: 'acc-syd',
     name: 'Airbnb Sydney',
     address: '72 Macarthur Street, Ultimo, NSW 2007',
-    checkIn: '2026-05-09',
+    checkIn: '2026-05-08',
     checkOut: '2026-05-10',
     notes: 'Check-in time 3pm',
   },
@@ -45,7 +45,7 @@ export const ACCOMMODATIONS = [
 
 export const TRIP_META = {
   title: 'Sydney & Tasmania 2026',
-  startDate: '2026-05-08',
+  startDate: '2026-05-07',
   endDate: '2026-05-17',
 };
 
@@ -60,7 +60,7 @@ export const LOCATIONS = [
 export const DAYS = [
   {
     id: 'day-1',
-    date: '2026-05-08',
+    date: '2026-05-07',
     label: 'Departure — HKG to Sydney',
     locationId: 'syd',
     flights: [
@@ -69,8 +69,8 @@ export const DAYS = [
         type: 'flight',
         from: { code: 'HKG', name: 'Hong Kong International' },
         to: { code: 'SYD', name: 'Sydney Kingsford Smith' },
-        departureTime: '2026-05-08T21:35:00',
-        arrivalTime: '2026-05-09T08:40:00',
+        departureTime: '2026-05-07T21:35:00',
+        arrivalTime: '2026-05-08T08:40:00',
         notes: null,
       },
     ],
