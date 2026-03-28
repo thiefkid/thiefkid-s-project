@@ -77,7 +77,13 @@ export default function DayCard({ day, dayNumber, defaultOpen, onShowOnMap }) {
             <ActivityItem key={a.id} activity={a} onShowOnMap={onShowOnMap} />
           ))}
           {accommodation && (
-            <HotelCard hotel={accommodation} isCheckIn={isCheckIn} />
+            <HotelCard
+              hotel={accommodation}
+              isCheckIn={isCheckIn}
+              onShowOnMap={onShowOnMap}
+              lat={location?.lat}
+              lng={location?.lng}
+            />
           )}
         </div>
       )}

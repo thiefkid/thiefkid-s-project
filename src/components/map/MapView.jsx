@@ -98,8 +98,6 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
                   <div style={{ color: '#64748b', fontSize: 11, marginBottom: 6 }}>{act.dayLabel}</div>
                   <a
                     href={`https://www.google.com/maps?q=${act.lat},${act.lng}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     style={{ color: '#3b82f6', fontSize: 12 }}
                   >
                     📍 Open in Google Maps

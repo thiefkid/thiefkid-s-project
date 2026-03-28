@@ -40,8 +40,6 @@ export default function LocationPopup({ location }) {
       )}
       <a
         href={googleMapsUrl}
-        target="_blank"
-        rel="noopener noreferrer"
         style={{
           display: 'block',
           marginTop: 8,
