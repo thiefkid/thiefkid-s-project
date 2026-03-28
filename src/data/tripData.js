@@ -1,3 +1,48 @@
+// All accommodation stays. Days look up their nightly stay from here — no
+// hotel data lives on individual day objects.
+export const ACCOMMODATIONS = [
+  {
+    id: 'acc-syd',
+    name: 'Airbnb Sydney',
+    address: '72 Macarthur Street, Ultimo, NSW 2007',
+    checkIn: '2026-05-09',
+    checkOut: '2026-05-10',
+    notes: 'Check-in time 3pm',
+  },
+  {
+    id: 'acc-lst',
+    name: 'Airbnb Launceston',
+    address: '5 Avenger Avenue, Kings Meadows, TAS 7249',
+    checkIn: '2026-05-10',
+    checkOut: '2026-05-12',
+    notes: null,
+  },
+  {
+    id: 'acc-swn',
+    name: 'Airbnb Swansea',
+    address: '3 Bluff Circle, Swansea, TAS 7190',
+    checkIn: '2026-05-12',
+    checkOut: '2026-05-13',
+    notes: null,
+  },
+  {
+    id: 'acc-hbt',
+    name: 'Airbnb Hobart (Berriedale)',
+    address: '12 Chablis Court, Berriedale, TAS 7011',
+    checkIn: '2026-05-13',
+    checkOut: '2026-05-16',
+    notes: null,
+  },
+  {
+    id: 'acc-mel',
+    name: 'Novotel Melbourne Hotel',
+    address: 'Melbourne, VIC',
+    checkIn: '2026-05-16',
+    checkOut: '2026-05-17',
+    notes: null,
+  },
+];
+
 export const TRIP_META = {
   title: 'Sydney & Tasmania 2026',
   startDate: '2026-05-08',
@@ -29,14 +74,6 @@ export const DAYS = [
         notes: null,
       },
     ],
-    hotel: {
-      id: 'hotel-syd',
-      name: 'Airbnb Sydney',
-      address: '72 Macarthur Street, Ultimo, NSW 2007',
-      checkIn: '2026-05-09',
-      checkOut: '2026-05-10',
-      notes: 'Check-in time 3pm',
-    },
     activities: [],
   },
   {
@@ -45,7 +82,6 @@ export const DAYS = [
     label: 'Sydney — Arrive & Explore',
     locationId: 'syd',
     flights: [],
-    hotel: null,
     activities: [
       {
         id: 'act-syd-1',
@@ -75,14 +111,6 @@ export const DAYS = [
         notes: 'Rental car: Apex Car — collect at airport',
       },
     ],
-    hotel: {
-      id: 'hotel-lst',
-      name: 'Airbnb Launceston',
-      address: '5 Avenger Avenue, Kings Meadows, TAS 7249',
-      checkIn: '2026-05-10',
-      checkOut: '2026-05-12',
-      notes: null,
-    },
     activities: [
       {
         id: 'act-lst-1',
@@ -112,7 +140,6 @@ export const DAYS = [
     label: 'Sheffield Murals & Cradle Mountain',
     locationId: 'lst',
     flights: [],
-    hotel: null,
     activities: [
       {
         id: 'act-lst-3',
@@ -142,14 +169,6 @@ export const DAYS = [
     label: 'Ross → Freycinet National Park → Swansea',
     locationId: 'swn',
     flights: [],
-    hotel: {
-      id: 'hotel-swn',
-      name: 'Airbnb Swansea',
-      address: '3 Bluff Circle, Swansea, TAS 7190',
-      checkIn: '2026-05-12',
-      checkOut: '2026-05-13',
-      notes: null,
-    },
     activities: [
       {
         id: 'act-swn-1',
@@ -189,14 +208,6 @@ export const DAYS = [
     label: 'Drive to Hobart — Bonorong & MONA',
     locationId: 'hbt',
     flights: [],
-    hotel: {
-      id: 'hotel-hbt',
-      name: 'Airbnb Hobart (Berriedale)',
-      address: '12 Chablis Court, Berriedale, TAS 7011',
-      checkIn: '2026-05-13',
-      checkOut: '2026-05-16',
-      notes: null,
-    },
     activities: [
       {
         id: 'act-hbt-1',
@@ -236,7 +247,6 @@ export const DAYS = [
     label: 'Richmond & Tasman Peninsula',
     locationId: 'hbt',
     flights: [],
-    hotel: null,
     activities: [
       {
         id: 'act-hbt-4',
@@ -266,7 +276,6 @@ export const DAYS = [
     label: 'Mount Wellington & Bruny Island',
     locationId: 'hbt',
     flights: [],
-    hotel: null,
     activities: [
       {
         id: 'act-hbt-6',
@@ -306,14 +315,6 @@ export const DAYS = [
         notes: null,
       },
     ],
-    hotel: {
-      id: 'hotel-mel',
-      name: 'Novotel Melbourne Hotel',
-      address: 'Melbourne, VIC',
-      checkIn: '2026-05-16',
-      checkOut: '2026-05-17',
-      notes: null,
-    },
     activities: [
       {
         id: 'act-hbt-8',
@@ -392,7 +393,6 @@ export const DAYS = [
         notes: 'Passenger 2',
       },
     ],
-    hotel: null,
     activities: [],
   },
 ];

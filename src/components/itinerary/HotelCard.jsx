@@ -1,8 +1,38 @@
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, differenceInDays } from 'date-fns';
 
-export default function HotelCard({ hotel }) {
+export default function HotelCard({ hotel, isCheckIn }) {
   const googleMapsUrl = `https://maps.google.com/?q=${encodeURIComponent(hotel.address)}`;
+  const nights = differenceInDays(parseISO(hotel.checkOut), parseISO(hotel.checkIn));
 
+  if (!isCheckIn) {
+    // Continuing night — compact display
+    return (
+      <div className="flex items-center justify-between gap-3 py-2">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center flex-shrink-0">
+            <span className="text-base">🌙</span>
+          </div>
+          <div>
+            <span className="text-sm text-slate-600">
+              Staying at <span className="font-medium text-slate-800">{hotel.name}</span>
+            </span>
+            <p className="text-xs text-slate-400">{hotel.address}</p>
+          </div>
+        </div>
+        <a
+          href={googleMapsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 flex-shrink-0 text-blue-500 hover:text-blue-700 transition-colors"
+        >
+          <span>📍</span>
+          <span className="text-xs whitespace-nowrap">Maps</span>
+        </a>
+      </div>
+    );
+  }
+
+  // Check-in day — full details
   return (
     <div className="flex items-start gap-3 py-2">
       <div className="mt-0.5 w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
@@ -14,10 +44,9 @@ export default function HotelCard({ hotel }) {
             <div className="flex items-center gap-2 flex-wrap">
               <span className="font-medium text-sm text-slate-800">{hotel.name}</span>
               <span className="text-xs text-slate-500">
-                {format(parseISO(hotel.checkIn), 'dd MMM')}
-                {hotel.checkOut !== hotel.checkIn
-                  ? ` – ${format(parseISO(hotel.checkOut), 'dd MMM')}`
-                  : ''}
+                Check-in {format(parseISO(hotel.checkIn), 'dd MMM')}
+                {' · '}
+                {nights} night{nights !== 1 ? 's' : ''}
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5">{hotel.address}</p>
@@ -34,7 +63,6 @@ export default function HotelCard({ hotel }) {
             href={googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            title="Open in Google Maps"
             className="flex items-center gap-1 flex-shrink-0 mt-0.5 text-blue-500 hover:text-blue-700 transition-colors"
           >
             <span>📍</span>

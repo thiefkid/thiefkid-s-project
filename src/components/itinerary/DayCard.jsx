@@ -1,9 +1,16 @@
 import { useState } from 'react';
 import { format, parseISO, isToday, isPast } from 'date-fns';
-import { LOCATIONS } from '../../data/tripData.js';
+import { LOCATIONS, ACCOMMODATIONS } from '../../data/tripData.js';
 import FlightSegment from './FlightSegment.jsx';
 import HotelCard from './HotelCard.jsx';
 import ActivityItem from './ActivityItem.jsx';
+
+// Find which accommodation covers a given date (checkIn <= date < checkOut)
+function getAccommodationForDate(dateStr) {
+  return ACCOMMODATIONS.find(
+    (a) => a.checkIn <= dateStr && dateStr < a.checkOut
+  ) ?? null;
+}
 
 export default function DayCard({ day, dayNumber, defaultOpen, onShowOnMap }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -11,12 +18,14 @@ export default function DayCard({ day, dayNumber, defaultOpen, onShowOnMap }) {
   const location = LOCATIONS.find((l) => l.id === day.locationId);
   const borderColor = location?.color ?? '#94a3b8';
 
-  const hasContent =
-    day.flights.length > 0 || day.hotel || day.activities.length > 0;
-
   const date = parseISO(day.date);
   const isCurrentDay = isToday(date);
   const isPastDay = !isCurrentDay && isPast(date);
+
+  const accommodation = getAccommodationForDate(day.date);
+  const isCheckIn = accommodation?.checkIn === day.date;
+
+  const hasContent = day.flights.length > 0 || day.activities.length > 0 || accommodation;
 
   return (
     <div
@@ -58,16 +67,18 @@ export default function DayCard({ day, dayNumber, defaultOpen, onShowOnMap }) {
         <span className="text-slate-400 ml-2 flex-shrink-0 text-lg">{open ? '▲' : '▼'}</span>
       </button>
 
-      {/* Body */}
+      {/* Body — flights and activities first, accommodation last */}
       {open && hasContent && (
         <div className="px-4 pb-3 border-t border-slate-100 divide-y divide-slate-100">
           {day.flights.map((f) => (
             <FlightSegment key={f.id} flight={f} />
           ))}
-          {day.hotel && <HotelCard hotel={day.hotel} />}
           {day.activities.map((a) => (
             <ActivityItem key={a.id} activity={a} onShowOnMap={onShowOnMap} />
           ))}
+          {accommodation && (
+            <HotelCard hotel={accommodation} isCheckIn={isCheckIn} />
+          )}
         </div>
       )}
       {open && !hasContent && (

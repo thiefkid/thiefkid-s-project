@@ -1,11 +1,10 @@
-import { DAYS } from '../../data/tripData.js';
+import { DAYS, ACCOMMODATIONS } from '../../data/tripData.js';
 
 export default function LocationPopup({ location }) {
   const days = DAYS.filter((d) => d.locationId === location.id);
-  const hotels = days
-    .filter((d) => d.hotel)
-    .map((d) => d.hotel)
-    .filter((h, i, arr) => arr.findIndex((x) => x.id === h.id) === i);
+  const dayDates = new Set(days.map((d) => d.date));
+  // Find accommodations whose check-in date falls within this location's days
+  const hotels = ACCOMMODATIONS.filter((a) => dayDates.has(a.checkIn));
   const activities = days.flatMap((d) => d.activities).filter((a) => a.name);
   const googleMapsUrl = `https://www.google.com/maps?q=${location.lat},${location.lng}`;
 
@@ -27,6 +26,7 @@ export default function LocationPopup({ location }) {
               <span style={{ color: '#334155' }}>{h.name}</span>
             </div>
           ))}
+
         </div>
       )}
       {activities.slice(0, 5).map((a) => (
