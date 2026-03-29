@@ -1,5 +1,23 @@
 import '@testing-library/jest-dom';
 
+// Prevent real Firebase connections in tests
+vi.mock('../firebase.js', () => ({ db: {} }));
+
+vi.mock('../hooks/useTripData.js', async () => {
+  const { DAYS, ACCOMMODATIONS } = await vi.importActual('../data/tripData.js');
+  return {
+    useTripData: () => ({ days: DAYS, accommodations: ACCOMMODATIONS, status: 'ok' }),
+  };
+});
+
+vi.mock('../hooks/useTripMutations.js', () => ({
+  useTripMutations: () => ({
+    addActivity: vi.fn(),
+    deleteActivity: vi.fn(),
+    updateActivity: vi.fn(),
+  }),
+}));
+
 // Leaflet uses browser APIs not available in jsdom
 vi.mock('leaflet', () => ({
   default: {
