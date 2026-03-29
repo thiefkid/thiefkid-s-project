@@ -60,16 +60,38 @@ export default function AddEditActivityModal({ existing, dayDate, onSave, onClos
     setSaving(true);
     setError('');
     try {
+      const address = form.address.trim() || null;
+
+      // Preserve existing coords when editing; geocode when there's an address but no coords yet
+      let lat = isEdit ? (existing.lat ?? null) : null;
+      let lng = isEdit ? (existing.lng ?? null) : null;
+
+      if (address && lat == null) {
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address)}`,
+            { headers: { 'Accept-Language': 'en' } }
+          );
+          const results = await res.json();
+          if (results.length > 0) {
+            lat = parseFloat(results[0].lat);
+            lng = parseFloat(results[0].lon);
+          }
+        } catch {
+          // Geocoding failed — save without coords, pin won't appear
+        }
+      }
+
       const activity = {
         id:       isEdit ? existing.id : `user-${Date.now()}`,
         name:     form.name.trim(),
         type:     form.type,
         time:     form.time     || null,
         duration: form.duration.trim() || null,
-        address:  form.address.trim()  || null,
+        address,
         notes:    form.notes.trim()    || null,
-        lat:      isEdit ? (existing.lat ?? null) : null,
-        lng:      isEdit ? (existing.lng ?? null) : null,
+        lat,
+        lng,
       };
       await onSave(activity);
       onClose();

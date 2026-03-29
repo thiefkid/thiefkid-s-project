@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { LOCATIONS, DAYS, ACCOMMODATIONS } from '../../data/tripData.js';
+import { LOCATIONS } from '../../data/tripData.js';
+import { useTripData } from '../../hooks/useTripData.js';
 import LocationPopup from './LocationPopup.jsx';
 
 // Fix Leaflet default marker icon paths (broken with Vite bundling)
@@ -16,13 +17,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: markerShadow,
 });
 
-// Gather all activities that have lat/lng
-const activityMarkers = DAYS.flatMap((d) =>
-  d.activities
-    .filter((a) => a.lat && a.lng)
-    .map((a) => ({ ...a, dayLabel: d.label }))
-);
-
 // Must be rendered inside MapContainer so useMap() has access to the map instance
 function FlyToTarget({ mapTarget, onConsumed }) {
   const map = useMap();
@@ -36,6 +30,14 @@ function FlyToTarget({ mapTarget, onConsumed }) {
 }
 
 export default function MapView({ mapTarget, onMapTargetConsumed }) {
+  const { days, accommodations } = useTripData();
+
+  const activityMarkers = days.flatMap((d) =>
+    d.activities
+      .filter((a) => a.lat && a.lng)
+      .map((a) => ({ ...a, dayLabel: d.label }))
+  );
+
   return (
     <div className="pt-4">
       {/* City quick-jump buttons */}
@@ -90,7 +92,7 @@ export default function MapView({ mapTarget, onMapTargetConsumed }) {
           ))}
 
           {/* Accommodation markers — 🏠 tap goes directly to Google Maps */}
-          {ACCOMMODATIONS.filter((a) => a.lat && a.lng).map((acc) => {
+          {accommodations.filter((a) => a.lat && a.lng).map((acc) => {
             const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(acc.address)}`;
             const icon = L.divIcon({
               html: '🏠',
