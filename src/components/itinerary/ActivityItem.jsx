@@ -8,7 +8,7 @@ const TYPE_META = {
   free:      { emoji: '☀️', bg: 'bg-yellow-100' },
 };
 
-export default function ActivityItem({ activity, onShowOnMap }) {
+export default function ActivityItem({ activity, onShowOnMap, onEdit, onDelete }) {
   const meta = TYPE_META[activity.type] || TYPE_META.free;
   const hasLocation = activity.lat && activity.lng;
 
@@ -43,15 +43,35 @@ export default function ActivityItem({ activity, onShowOnMap }) {
               </span>
             )}
           </div>
-          {hasLocation && (
-            <button
-              onClick={() => onShowOnMap({ lat: activity.lat, lng: activity.lng, zoom: 15, label: activity.name })}
-              title="Show on map"
-              className="flex items-center gap-1 flex-shrink-0 mt-0.5 text-blue-500 hover:text-blue-700 active:text-blue-800 transition-colors px-2 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-xs font-medium"
-            >
-              📍 Map
-            </button>
-          )}
+          <div className="flex items-center gap-1 flex-shrink-0 mt-0.5">
+            {hasLocation && (
+              <button
+                onClick={() => onShowOnMap({ lat: activity.lat, lng: activity.lng, zoom: 15, label: activity.name })}
+                title="Show on map"
+                className="flex items-center gap-1 text-blue-500 hover:text-blue-700 active:text-blue-800 transition-colors px-2 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-xs font-medium"
+              >
+                📍 Map
+              </button>
+            )}
+            {onEdit && (
+              <button
+                onClick={onEdit}
+                title="Edit activity"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors text-sm"
+              >
+                ✏️
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={onDelete}
+                title="Delete activity"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors text-sm"
+              >
+                🗑
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

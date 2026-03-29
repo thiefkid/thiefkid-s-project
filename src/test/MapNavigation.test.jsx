@@ -72,6 +72,7 @@ describe('Map navigation — every accommodation directs to its own address coor
           day={day}
           dayNumber={dayNumber}
           defaultOpen={true}
+          accommodations={ACCOMMODATIONS}
           onShowOnMap={onShowOnMap}
         />
       );
