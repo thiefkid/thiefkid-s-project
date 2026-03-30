@@ -17,6 +17,7 @@ export default function DayCard({
   dayNumber,
   defaultOpen,
   accommodations,
+  weather,
   onShowOnMap,
   onAddActivity,
   onDeleteActivity,
@@ -83,6 +84,14 @@ export default function DayCard({
                 )}
               </div>
               <p className="text-sm font-semibold text-slate-800 mt-0.5 leading-tight">{day.label}</p>
+              {weather && (
+                <span className="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
+                  <span>{weather.emoji}</span>
+                  <span>{weather.fake ? '~' : ''}{weather.max}°/{weather.min}°</span>
+                  {weather.precip > 0 && <span>· {weather.precip.toFixed(1)}mm</span>}
+                  {weather.fake && <span className="text-slate-400 italic">(est.)</span>}
+                </span>
+              )}
             </div>
           </div>
           <span className="text-slate-400 ml-2 flex-shrink-0 text-lg">{open ? '▲' : '▼'}</span>
