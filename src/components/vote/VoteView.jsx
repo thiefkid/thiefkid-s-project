@@ -1,54 +1,73 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useVotes } from '../../hooks/useVotes.js';
 
 const VOTE_OPTIONS = [
   {
     id: 'strip-club-syd',
     emoji: '💃',
     title: 'Strip Club in Sydney',
-    description: 'Visit a gentleman\'s club on the evening of May 9 (Saturday night) in Sydney.',
+    description: "Visit a gentleman's club on the evening of May 9 (Saturday night) in Sydney.",
   },
 ];
 
-const STORAGE_KEY = 'trip-votes';
-
-function loadVotes() {
+function getSavedName() {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) ?? {};
+    return localStorage.getItem('voter-name') ?? '';
   } catch {
-    return {};
+    return '';
   }
 }
 
-function saveVotes(votes) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(votes));
+function saveName(name) {
+  try {
+    localStorage.setItem('voter-name', name);
+  } catch {}
 }
 
 export default function VoteView() {
-  const [votes, setVotes] = useState(loadVotes);
-  const [dialog, setDialog] = useState(null); // { title, voted }
+  const { votersByOption, submitVote } = useVotes();
+  const [pendingVote, setPendingVote] = useState(null); // { optionId, choice }
+  const [nameInput, setNameInput] = useState('');
+  const [thankYou, setThankYou] = useState(null); // { optionId, choice }
 
-  useEffect(() => {
-    saveVotes(votes);
-  }, [votes]);
+  function handleVoteClick(optionId, choice) {
+    const saved = getSavedName();
+    if (saved) {
+      submitVote(optionId, saved, choice);
+      setThankYou({ optionId, choice });
+    } else {
+      setPendingVote({ optionId, choice });
+      setNameInput('');
+    }
+  }
 
-  function handleVote(optionId, choice) {
-    setVotes((prev) => ({ ...prev, [optionId]: choice }));
-    setDialog({ optionId, choice });
+  function handleNameSubmit() {
+    const name = nameInput.trim();
+    if (!name) return;
+    saveName(name);
+    submitVote(pendingVote.optionId, name, pendingVote.choice);
+    setThankYou({ optionId: pendingVote.optionId, choice: pendingVote.choice });
+    setPendingVote(null);
+    setNameInput('');
   }
 
   return (
     <div className="pt-4 space-y-4">
       <p className="text-sm text-slate-500">
-        Vote on optional activities. Everyone's vote is saved on this device.
+        Vote on optional activities. Results are shared across all devices in real-time.
       </p>
 
       {VOTE_OPTIONS.map((opt) => {
-        const myVote = votes[opt.id];
-        const yesCount = Object.entries(votes).filter(([k, v]) => k === opt.id && v === 'yes').length;
-        const noCount  = Object.entries(votes).filter(([k, v]) => k === opt.id && v === 'no').length;
+        const voters = votersByOption[opt.id] ?? {};
+        const yesVoters = Object.entries(voters).filter(([, v]) => v === 'yes').map(([k]) => k);
+        const noVoters  = Object.entries(voters).filter(([, v]) => v === 'no').map(([k]) => k);
+        const total = yesVoters.length + noVoters.length;
+        const yesPct = total > 0 ? Math.round((yesVoters.length / total) * 100) : null;
+        const savedName = getSavedName();
+        const myVote = savedName ? voters[savedName.toLowerCase()] : null;
 
         return (
-          <div key={opt.id} className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+          <div key={opt.id} className="bg-white rounded-xl shadow-sm border border-slateate-200 p-4">
             <div className="flex items-start gap-3 mb-4">
               <span className="text-3xl">{opt.emoji}</span>
               <div>
@@ -57,9 +76,42 @@ export default function VoteView() {
               </div>
             </div>
 
+            {/* Voter lists */}
+            {total > 0 && (
+              <div className="mb-3 space-y-1">
+                <div className="text-sm text-slate-600">
+                  <span className="font-medium text-green-600">👍 Yes ({yesVoters.length})</span>
+                  {yesVoters.length > 0 && (
+                    <span className="text-slate-400"> — {yesVoters.join(', ')}</span>
+                  )}
+                </div>
+                <div className="text-sm text-slate-600">
+                  <span className="font-medium text-red-600">👎 No ({noVoters.length})</span>
+                  {noVoters.length > 0 && (
+                    <span className="text-slate-400"> — {noVoters.join(', ')}</span>
+                  )}
+                </div>
+
+                {/* Percentage bar */}
+                <div className="mt-2">
+                  <div className="flex justify-between text-xs text-slate-500 mb-1">
+                    <span>{yesPct}% Yes</span>
+                    <span>{100 - yesPct}% No</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-red-100 overflow-hidden">
+                    <div
+                      className="h-full bg-green-500 rounded-full transition-all duration-500"
+                      style={{ width: `${yesPct}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Vote buttons */}
             <div className="flex gap-3">
               <button
-                onClick={() => handleVote(opt.id, 'yes')}
+                onClick={() => handleVoteClick(opt.id, 'yes')}
                 className={`flex-1 py-2.5 rounded-lg font-medium text-sm transition-all ${
                   myVote === 'yes'
                     ? 'bg-green-500 text-white shadow-sm'
@@ -69,7 +121,7 @@ export default function VoteView() {
                 👍 Yes {myVote === 'yes' && '✓'}
               </button>
               <button
-                onClick={() => handleVote(opt.id, 'no')}
+                onClick={() => handleVoteClick(opt.id, 'no')}
                 className={`flex-1 py-2.5 rounded-lg font-medium text-sm transition-all ${
                   myVote === 'no'
                     ? 'bg-red-500 text-white shadow-sm'
@@ -89,26 +141,64 @@ export default function VoteView() {
         );
       })}
 
-      {/* Thank-you dialog */}
-      {dialog && (
+      {/* Name prompt dialog */}
+      {pendingVote && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40"
-          onClick={() => setDialog(null)}
+          onClick={() => setPendingVote(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-xl p-6 max-w-xs w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-4xl mb-3 text-center">
+              {pendingVote.choice === 'yes' ? '👍' : '👎'}
+            </div>
+            <h2 className="text-lg font-bold text-slate-800 mb-1 text-center">What's your name?</h2>
+            <p className="text-sm text-slate-500 mb-4 text-center">
+              So everyone knows who voted{' '}
+              <span className="font-semibold">{pendingVote.choice === 'yes' ? 'Yes' : 'No'}</span>.
+            </p>
+            <input
+              autoFocus
+              type="text"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleNameSubmit()}
+              placeholder="e.g. Alice"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm mb-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            />
+            <button
+              onClick={handleNameSubmit}
+              disabled={!nameInput.trim()}
+              className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 disabled:opacity-40 text-white font-medium rounded-lg transition-colors"
+            >
+              Submit Vote
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Thank-you dialog */}
+      {thankYou && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40"
+          onClick={() => setThankYou(null)}
         >
           <div
             className="bg-white rounded-2xl shadow-xl p-6 max-w-xs w-full text-center"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="text-5xl mb-3">{dialog.choice === 'yes' ? '🎉' : '🙅'}</div>
+            <div className="text-5xl mb-3">{thankYou.choice === 'yes' ? '🎉' : '🙅'}</div>
             <h2 className="text-lg font-bold text-slate-800 mb-1">Thanks for voting!</h2>
             <p className="text-sm text-slate-500 mb-4">
-              You voted <span className="font-semibold">{dialog.choice === 'yes' ? '👍 Yes' : '👎 No'}</span> on{' '}
+              You voted <span className="font-semibold">{thankYou.choice === 'yes' ? '👍 Yes' : '👎 No'}</span> on{' '}
               <span className="font-semibold">
-                {VOTE_OPTIONS.find((o) => o.id === dialog.optionId)?.title}
+                {VOTE_OPTIONS.find((o) => o.id === thankYou.optionId)?.title}
               </span>.
             </p>
             <button
-              onClick={() => setDialog(null)}
+              onClick={() => setThankYou(null)}
               className="w-full py-2.5 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors"
             >
               Done
