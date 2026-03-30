@@ -49,8 +49,8 @@ export default function DayCard({
   return (
     <>
       <div
-        className={`bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden transition-opacity ${
-          isPastDay ? 'opacity-70' : ''
+        className={`bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden transition-opacity ${
+          isPastDay ? 'opacity-60' : ''
         }`}
         style={{ borderLeftWidth: 4, borderLeftColor: borderColor }}
       >
@@ -78,12 +78,12 @@ export default function DayCard({
                   Day {dayNumber}
                 </span>
                 {isCurrentDay && (
-                  <span className="text-xs font-medium bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-bold bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full">
                     Today
                   </span>
                 )}
               </div>
-              <p className="text-sm font-semibold text-slate-800 mt-0.5 leading-tight">{day.label}</p>
+              <p className="text-sm font-bold text-slate-800 mt-0.5 leading-tight">{day.label}</p>
               {weather && (
                 <span className="flex items-center gap-1 text-xs text-slate-500 mt-0.5">
                   <span>{weather.emoji}</span>

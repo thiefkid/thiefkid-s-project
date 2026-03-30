@@ -16,7 +16,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-white">
       <Header />
       <div className="sticky top-0 z-40 bg-white shadow-sm">
         <div className="max-w-2xl mx-auto">
