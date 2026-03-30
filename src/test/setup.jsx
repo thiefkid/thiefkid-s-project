@@ -25,6 +25,10 @@ vi.mock('../hooks/useVotes.js', () => ({
   }),
 }));
 
+vi.mock('../hooks/useWeather.js', () => ({
+  useWeather: () => ({}),
+}));
+
 // Leaflet uses browser APIs not available in jsdom
 vi.mock('leaflet', () => ({
   default: {

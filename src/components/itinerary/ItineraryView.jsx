@@ -1,6 +1,7 @@
 import { parseISO, isPast, isToday } from 'date-fns';
 import { useTripData } from '../../hooks/useTripData.js';
 import { useTripMutations } from '../../hooks/useTripMutations.js';
+import { useWeather } from '../../hooks/useWeather.js';
 import DayCard from './DayCard.jsx';
 
 const SYNC_BADGE = {
@@ -12,6 +13,7 @@ const SYNC_BADGE = {
 export default function ItineraryView({ onShowOnMap }) {
   const { days, accommodations, status } = useTripData();
   const { addActivity, deleteActivity, updateActivity } = useTripMutations();
+  const weatherByDate = useWeather(days);
   const badge = SYNC_BADGE[status];
 
   if (status === 'loading' && days.length === 0) {
@@ -52,6 +54,7 @@ export default function ItineraryView({ onShowOnMap }) {
             dayNumber={i + 1}
             defaultOpen={defaultOpen}
             accommodations={accommodations}
+            weather={weatherByDate[day.date]}
             onShowOnMap={onShowOnMap}
             onAddActivity={(activity) => addActivity(day.id, activity)}
             onDeleteActivity={(activity) => deleteActivity(day.id, activity)}
