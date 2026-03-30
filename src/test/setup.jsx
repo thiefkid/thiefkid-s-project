@@ -18,6 +18,13 @@ vi.mock('../hooks/useTripMutations.js', () => ({
   }),
 }));
 
+vi.mock('../hooks/useVotes.js', () => ({
+  useVotes: () => ({
+    votersByOption: {},
+    submitVote: vi.fn(),
+  }),
+}));
+
 // Leaflet uses browser APIs not available in jsdom
 vi.mock('leaflet', () => ({
   default: {
