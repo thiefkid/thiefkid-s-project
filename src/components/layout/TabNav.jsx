@@ -14,7 +14,7 @@ export default function TabNav({ activeTab, setActiveTab }) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 transition-all active:opacity-60 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-0.5 pt-2 pb-0 transition-all active:opacity-60 ${
               isActive ? 'text-teal-600' : 'text-slate-400'
             }`}
           >
