@@ -14,22 +14,14 @@ export default function TabNav({ activeTab, setActiveTab }) {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-all active:scale-95 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 transition-all active:opacity-60 ${
               isActive ? 'text-teal-600' : 'text-slate-400'
             }`}
           >
-            {/* Active dot indicator */}
-            <span
-              className={`w-1 h-1 rounded-full transition-all duration-200 ${
-                isActive ? 'bg-teal-500 scale-100' : 'scale-0'
-              }`}
-            />
-            <span className={`text-2xl leading-none transition-transform duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}>
+            <span className={`text-xl leading-none transition-transform duration-150 ${isActive ? 'scale-110' : 'scale-100'}`}>
               {tab.icon}
             </span>
-            <span className={`text-[10px] font-bold tracking-wide uppercase transition-colors ${
-              isActive ? 'text-teal-600' : 'text-slate-400'
-            }`}>
+            <span className="text-[10px] font-bold tracking-wide uppercase">
               {tab.label}
             </span>
           </button>
