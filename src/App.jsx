@@ -16,24 +16,49 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
-      <div className="sticky top-0 z-40 bg-white shadow-sm">
-        <div className="max-w-2xl mx-auto">
-          <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
-        </div>
+    // h-[100dvh]: dynamic viewport height — respects iOS browser chrome appearing/disappearing
+    <div className="h-[100dvh] flex flex-col bg-white overflow-hidden">
+
+      {/* ── Fixed header at top ── */}
+      <div className="flex-shrink-0">
+        <Header />
       </div>
-      <main className="max-w-2xl mx-auto px-4 pb-8">
-        {activeTab === 'itinerary' && <ItineraryView onShowOnMap={handleShowOnMap} />}
+
+      {/* ── Scrollable content area ── */}
+      <main className="flex-1 overflow-y-auto overscroll-contain min-h-0">
+        {activeTab === 'itinerary' && (
+          <div className="max-w-2xl mx-auto px-4 pb-4">
+            <ItineraryView onShowOnMap={handleShowOnMap} />
+          </div>
+        )}
         {activeTab === 'map' && (
           <MapView
             mapTarget={mapTarget}
             onMapTargetConsumed={() => setMapTarget(null)}
           />
         )}
-        {activeTab === 'packing' && <PackingView />}
-        {activeTab === 'vote' && <VoteView />}
+        {activeTab === 'packing' && (
+          <div className="max-w-2xl mx-auto px-4 pb-4">
+            <PackingView />
+          </div>
+        )}
+        {activeTab === 'vote' && (
+          <div className="max-w-2xl mx-auto px-4 pb-4">
+            <VoteView />
+          </div>
+        )}
       </main>
+
+      {/* ── Fixed bottom tab bar with safe area for iPhone home indicator ── */}
+      <div
+        className="flex-shrink-0 bg-white border-t border-slate-100"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
+        <div className="max-w-2xl mx-auto">
+          <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
+        </div>
+      </div>
+
     </div>
   );
 }
