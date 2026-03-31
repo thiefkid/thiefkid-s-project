@@ -43,12 +43,12 @@ export default function Header() {
       <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-sky-400/15 blur-xl" />
       <div className="absolute top-0 left-1/2 w-72 h-72 -translate-x-1/2 rounded-full bg-white/5 blur-3xl" />
 
-      <div className="relative max-w-2xl mx-auto px-4 pt-5 pb-5">
+      <div className="relative max-w-2xl mx-auto px-4 pt-3 pb-3">
         {/* Route pills */}
-        <div className="flex items-center gap-1 flex-wrap mb-3">
+        <div className="flex items-center gap-1 flex-wrap mb-2">
           {ROUTE.map((city, i) => (
             <span key={i} className="flex items-center gap-1">
-              <span className="text-xs font-bold tracking-widest text-white/85 bg-white/10 border border-white/15 px-2 py-0.5 rounded-full">
+              <span className="text-[11px] font-bold tracking-widest text-white/85 bg-white/10 border border-white/15 px-1.5 py-0.5 rounded-full">
                 {city}
               </span>
               {i < ROUTE.length - 1 && (
@@ -58,26 +58,28 @@ export default function Header() {
           ))}
         </div>
 
-        {/* Title */}
-        <h1 className="text-3xl font-black tracking-tight leading-none text-white">
-          {TRIP_META.title}
-        </h1>
-        <p className="text-sky-200/80 text-sm mt-1.5 font-medium">
-          {format(start, 'd MMM')} – {format(end, 'd MMM yyyy')} &middot; {totalDays} days
-        </p>
+        {/* Title + date on one line */}
+        <div className="flex items-baseline gap-2 flex-wrap">
+          <h1 className="text-2xl font-black tracking-tight leading-none text-white">
+            {TRIP_META.title}
+          </h1>
+          <p className="text-sky-200/70 text-xs font-medium">
+            {format(start, 'd MMM')} – {format(end, 'd MMM yyyy')}
+          </p>
+        </div>
 
-        {/* Big countdown */}
-        <div className="mt-4 flex items-baseline gap-3">
-          <span className="text-5xl font-black tabular-nums leading-none text-white drop-shadow-sm">
+        {/* Compact countdown */}
+        <div className="mt-2 flex items-baseline gap-2">
+          <span className="text-4xl font-black tabular-nums leading-none text-white drop-shadow-sm">
             {countdownNum}
           </span>
-          <span className="text-teal-200 font-semibold text-base leading-tight">
+          <span className="text-teal-200 font-semibold text-sm leading-tight">
             {countdownLabel}
           </span>
         </div>
 
         {/* Build time */}
-        <p className="mt-3 text-white/30 text-xs font-mono">
+        <p className="mt-1.5 text-white/30 text-[10px] font-mono">
           Updated{' '}
           {new Date(__BUILD_TIME__).toLocaleString('en-AU', {
             timeZone: 'Asia/Hong_Kong',
