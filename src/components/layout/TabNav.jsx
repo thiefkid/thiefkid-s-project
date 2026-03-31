@@ -7,14 +7,14 @@ const TABS = [
 
 export default function TabNav({ activeTab, setActiveTab }) {
   return (
-    <div className="flex">
+    <div className="flex h-12">
       {TABS.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 flex flex-col items-center justify-center gap-0.5 pt-2 pb-0 transition-all active:opacity-60 ${
+            className={`flex-1 flex flex-col items-center justify-center gap-0.5 transition-all active:opacity-60 ${
               isActive ? 'text-teal-600' : 'text-slate-400'
             }`}
           >
