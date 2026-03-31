@@ -30,7 +30,14 @@ export default function Header() {
   }
 
   return (
-    <div className="relative bg-gradient-to-br from-sky-900 via-teal-800 to-slate-800 text-white overflow-hidden">
+    <div
+      className="relative bg-gradient-to-br from-sky-900 via-teal-800 to-slate-800 text-white overflow-hidden"
+      style={{
+        paddingTop: 'env(safe-area-inset-top)',
+        paddingLeft: 'env(safe-area-inset-left)',
+        paddingRight: 'env(safe-area-inset-right)',
+      }}
+    >
       {/* Decorative background blobs */}
       <div className="absolute -top-10 -right-10 w-56 h-56 rounded-full bg-teal-400/10 blur-2xl" />
       <div className="absolute -bottom-8 -left-8 w-40 h-40 rounded-full bg-sky-400/15 blur-xl" />
