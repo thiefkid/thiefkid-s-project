@@ -7,21 +7,24 @@ const TABS = [
 
 export default function TabNav({ activeTab, setActiveTab }) {
   return (
-    <div className="flex h-12">
+    <div className="flex">
       {TABS.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 flex flex-col items-center justify-center gap-0.5 transition-all active:opacity-60 ${
+            className={`flex-1 flex flex-col items-center gap-0.5 py-1.5 transition-all active:opacity-60 ${
               isActive ? 'text-teal-600' : 'text-slate-400'
             }`}
           >
-            <span className={`text-xl leading-none transition-transform duration-150 ${isActive ? 'scale-110' : 'scale-100'}`}>
+            <span
+              className={`transition-transform duration-150 ${isActive ? 'scale-110' : 'scale-100'}`}
+              style={{ fontSize: '20px', lineHeight: '22px', display: 'block' }}
+            >
               {tab.icon}
             </span>
-            <span className="text-[10px] font-bold tracking-wide uppercase">
+            <span className="text-[9px] font-bold tracking-wide uppercase leading-none">
               {tab.label}
             </span>
           </button>
