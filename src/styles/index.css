@@ -9,13 +9,12 @@ html, body, #root {
 }
 
 /*
- * Explicit white body background.
- * With viewport-fit=cover the body can bleed through below a container that is
- * shorter than the physical screen (e.g. when window.innerHeight < 100dvh on
- * older iOS). Matching the tab-bar colour hides any such gap.
+ * Body background matches theme-color so any bleed-through below the tab bar
+ * (home indicator area in standalone PWA) appears as the app chrome, not an
+ * empty white gap.
  */
 body {
-  background-color: #ffffff;
+  background-color: #0f172a;
 }
 
 /* ─── iOS tap highlight removal ─────────────────────────────────────────── */

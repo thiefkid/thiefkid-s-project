@@ -63,7 +63,7 @@ export default function App() {
       <div
         data-testid="tab-bar-wrapper"
         data-bottom-pad="env-safe-area"
-        className="flex-shrink-0 grow-0 bg-white border-t border-slate-100 overflow-hidden"
+        className="flex-shrink-0 grow-0 bg-slate-50 border-t border-slate-200 overflow-hidden"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="max-w-2xl mx-auto">

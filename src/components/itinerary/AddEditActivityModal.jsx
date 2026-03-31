@@ -107,11 +107,12 @@ export default function AddEditActivityModal({ existing, dayDate, onSave, onClos
       onClick={onClose}
     >
       <div
-        className="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto"
+        className="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-xl max-h-[85dvh] flex flex-col"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
+        <div className="flex-shrink-0 flex items-center justify-between px-4 pt-4 pb-2 border-b border-slate-100">
           <h2 className="text-base font-semibold text-slate-800">
             {isEdit ? 'Edit activity' : 'Add activity'}
           </h2>
@@ -123,87 +124,90 @@ export default function AddEditActivityModal({ existing, dayDate, onSave, onClos
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-4 py-3 space-y-3">
-          {/* Name */}
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">
-              Name <span className="text-red-400">*</span>
-            </label>
-            <input
-              autoFocus
-              type="text"
-              value={form.name}
-              onChange={(e) => set('name', e.target.value)}
-              placeholder="e.g. Harbour Bridge walk"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          {/* Type */}
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Type</label>
-            <select
-              value={form.type}
-              onChange={(e) => set('type', e.target.value)}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
-            >
-              {TYPE_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Time + Duration */}
-          <div className="grid grid-cols-2 gap-2">
+        <form onSubmit={handleSubmit} className="flex flex-col min-h-0 flex-1">
+          {/* Scrollable fields */}
+          <div className="overflow-y-auto px-4 py-3 space-y-3 flex-1 min-h-0">
+            {/* Name */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Time (optional)</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">
+                Name <span className="text-red-400">*</span>
+              </label>
               <input
-                type="datetime-local"
-                value={form.time}
-                onChange={(e) => set('time', e.target.value)}
+                autoFocus
+                type="text"
+                value={form.name}
+                onChange={(e) => set('name', e.target.value)}
+                placeholder="e.g. Harbour Bridge walk"
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
+            {/* Type */}
             <div>
-              <label className="block text-xs font-medium text-slate-600 mb-1">Duration (optional)</label>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Type</label>
+              <select
+                value={form.type}
+                onChange={(e) => set('type', e.target.value)}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white"
+              >
+                {TYPE_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>{o.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Time + Duration */}
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Time (optional)</label>
+                <input
+                  type="datetime-local"
+                  value={form.time}
+                  onChange={(e) => set('time', e.target.value)}
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600 mb-1">Duration (optional)</label>
+                <input
+                  type="text"
+                  value={form.duration}
+                  onChange={(e) => set('duration', e.target.value)}
+                  placeholder="e.g. 2h"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+              </div>
+            </div>
+
+            {/* Address */}
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Address (optional)</label>
               <input
                 type="text"
-                value={form.duration}
-                onChange={(e) => set('duration', e.target.value)}
-                placeholder="e.g. 2h"
+                value={form.address}
+                onChange={(e) => set('address', e.target.value)}
+                placeholder="e.g. 1 Macquarie St, Sydney NSW 2000"
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
             </div>
+
+            {/* Notes */}
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Notes (optional)</label>
+              <textarea
+                value={form.notes}
+                onChange={(e) => set('notes', e.target.value)}
+                placeholder="Booking reference, tips, opening hours…"
+                rows={2}
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
+              />
+            </div>
+
+            {error && <p className="text-xs text-red-500">{error}</p>}
           </div>
 
-          {/* Address */}
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Address (optional)</label>
-            <input
-              type="text"
-              value={form.address}
-              onChange={(e) => set('address', e.target.value)}
-              placeholder="e.g. 1 Macquarie St, Sydney NSW 2000"
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-            />
-          </div>
-
-          {/* Notes */}
-          <div>
-            <label className="block text-xs font-medium text-slate-600 mb-1">Notes (optional)</label>
-            <textarea
-              value={form.notes}
-              onChange={(e) => set('notes', e.target.value)}
-              placeholder="Booking reference, tips, opening hours…"
-              rows={3}
-              className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none"
-            />
-          </div>
-
-          {error && <p className="text-xs text-red-500">{error}</p>}
-
-          {/* Actions */}
-          <div className="flex gap-2 pt-1 pb-2">
+          {/* Actions — pinned at bottom, always visible */}
+          <div className="flex-shrink-0 flex gap-2 px-4 pt-2 pb-3 border-t border-slate-100">
             <button
               type="button"
               onClick={onClose}
