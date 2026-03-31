@@ -1,0 +1,19 @@
+{
+  "name": "Sydney & Tasmania 2026",
+  "short_name": "Aus Trip",
+  "description": "Trip planner — Sydney, Tasmania & Melbourne 2026",
+  "start_url": "/thiefkid-s-project/",
+  "scope": "/thiefkid-s-project/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -7,21 +7,34 @@ const TABS = [
 
 export default function TabNav({ activeTab, setActiveTab }) {
   return (
-    <div className="flex border-b border-slate-100">
-      {TABS.map((tab) => (
-        <button
-          key={tab.id}
-          onClick={() => setActiveTab(tab.id)}
-          className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-semibold transition-all border-b-2 ${
-            activeTab === tab.id
-              ? 'border-teal-500 text-teal-600'
-              : 'border-transparent text-slate-400 hover:text-slate-600 hover:border-slate-200'
-          }`}
-        >
-          <span className="text-lg leading-none">{tab.icon}</span>
-          <span className="tracking-wide uppercase text-[10px]">{tab.label}</span>
-        </button>
-      ))}
+    <div className="flex">
+      {TABS.map((tab) => {
+        const isActive = activeTab === tab.id;
+        return (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-2.5 transition-all active:scale-95 ${
+              isActive ? 'text-teal-600' : 'text-slate-400'
+            }`}
+          >
+            {/* Active dot indicator */}
+            <span
+              className={`w-1 h-1 rounded-full transition-all duration-200 ${
+                isActive ? 'bg-teal-500 scale-100' : 'scale-0'
+              }`}
+            />
+            <span className={`text-2xl leading-none transition-transform duration-200 ${isActive ? 'scale-110' : 'scale-100'}`}>
+              {tab.icon}
+            </span>
+            <span className={`text-[10px] font-bold tracking-wide uppercase transition-colors ${
+              isActive ? 'text-teal-600' : 'text-slate-400'
+            }`}>
+              {tab.label}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 }
