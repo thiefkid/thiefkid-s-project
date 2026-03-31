@@ -50,10 +50,7 @@ export default function App() {
       </main>
 
       {/* ── Fixed bottom tab bar with safe area for iPhone home indicator ── */}
-      <div
-        className="flex-shrink-0 grow-0 bg-white border-t border-slate-100 overflow-hidden"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
-      >
+      <div className="flex-shrink-0 grow-0 bg-white border-t border-slate-100 overflow-hidden tab-safe-bottom">
         <div className="max-w-2xl mx-auto">
           <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>

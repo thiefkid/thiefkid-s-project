@@ -27,6 +27,23 @@ html, body, #root {
   --safe-right:  env(safe-area-inset-right,  0px);
 }
 
+/*
+ * Tab bar bottom padding:
+ *   - Browser mode:   0px  — Safari positions content above its own chrome,
+ *                            no extra padding needed from us.
+ *   - Standalone PWA: env(safe-area-inset-bottom) — home indicator (~34px).
+ *                     In this mode the toolbar is gone; we own the full screen
+ *                     and must manually clear the home indicator ourselves.
+ */
+.tab-safe-bottom {
+  padding-bottom: 0px;
+}
+@media (display-mode: standalone) {
+  .tab-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
 /* ─── Leaflet z-index fixes ──────────────────────────────────────────────── */
 .leaflet-pane,
 .leaflet-tile,
