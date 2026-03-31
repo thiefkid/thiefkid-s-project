@@ -1,82 +1,52 @@
-import { render } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import App from '../App.jsx';
 
-// Helpers -----------------------------------------------------------------
-
-function mockMatchMedia(standaloneMatches) {
-  window.matchMedia = vi.fn((query) => ({
-    matches: query === '(display-mode: standalone)' ? standaloneMatches : false,
-    media: query,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-  }));
-}
-
-function setNavigatorStandalone(value) {
-  Object.defineProperty(window.navigator, 'standalone', {
-    value,
-    configurable: true,
-    writable: true,
-  });
-}
-
-function setInnerHeight(px) {
-  Object.defineProperty(window, 'innerHeight', {
-    value: px,
-    configurable: true,
-    writable: true,
-  });
-}
-
-afterEach(() => {
-  // Reset to undefined so next test starts clean
-  setNavigatorStandalone(undefined);
-});
-
-// Tests -------------------------------------------------------------------
-// Note: JSDOM rejects env() in inline styles (returns ''), so we assert on
-// the data-standalone attribute instead of paddingBottom directly.
-// The production behaviour (env() padding) is correct — only JSDOM can't
-// evaluate CSS environment variables.
+/*
+ * Layout tests for the bottom tab bar on iPhone 13 Pro Max.
+ *
+ * JSDOM cannot evaluate CSS env() or dvh units (it strips them from inline
+ * styles). We therefore assert on:
+ *   - CSS class names  (h-[100dvh] on the root div)
+ *   - data-* attributes (data-bottom-pad on the wrapper — tells us which
+ *     padding strategy is active, without relying on computed CSS values)
+ *   - DOM structure    (4 tab buttons inside the wrapper)
+ */
 
 describe('Tab bar layout — iPhone 13 Pro Max PWA vs browser', () => {
-  it('browser mode: tab bar is NOT in standalone mode (no phantom toolbar pad)', () => {
-    mockMatchMedia(false);
-    setNavigatorStandalone(false);
-
-    const { getByTestId } = render(<App />);
-    expect(getByTestId('tab-bar-wrapper').dataset.standalone).toBe('false');
-  });
-
-  it('PWA via display-mode:standalone (matchMedia): tab bar IS in standalone mode', () => {
-    mockMatchMedia(true);
-    setNavigatorStandalone(false);
-
-    const { getByTestId } = render(<App />);
-    expect(getByTestId('tab-bar-wrapper').dataset.standalone).toBe('true');
-  });
-
-  it('iOS PWA via navigator.standalone=true: tab bar IS in standalone even if matchMedia is false', () => {
-    mockMatchMedia(false);
-    setNavigatorStandalone(true);
-
-    const { getByTestId } = render(<App />);
-    expect(getByTestId('tab-bar-wrapper').dataset.standalone).toBe('true');
-  });
-
-  it('app root height equals window.innerHeight to eliminate phantom toolbar in dvh', () => {
-    mockMatchMedia(false);
-    setInnerHeight(844); // iPhone 13 Pro Max visible height in browser
-
+  it('app root uses h-[100dvh] CSS class, not a JS inline height', () => {
     const { container } = render(<App />);
-    expect(container.firstChild.style.height).toBe('844px');
+    const root = container.firstChild;
+    expect(root.className).toMatch(/h-\[100dvh\]/);
+    // No JS-driven inline height — that was the regression introduced earlier
+    expect(root.style.height).toBe('');
   });
 
-  it('standalone PWA: app height equals window.innerHeight (full screen, no phantom space)', () => {
-    mockMatchMedia(true);
-    setInnerHeight(926); // iPhone 13 Pro Max full height in PWA
+  it('tab bar wrapper carries data-bottom-pad="env-safe-area" (unconditional env() padding)', () => {
+    render(<App />);
+    const wrapper = screen.getByTestId('tab-bar-wrapper');
+    // env(safe-area-inset-bottom) is applied unconditionally via this marker:
+    //   browser mode  → resolves to 0px (viewport sits above Safari toolbar)
+    //   standalone PWA → resolves to ~34px (home indicator clearance)
+    expect(wrapper.dataset.bottomPad).toBe('env-safe-area');
+  });
 
-    const { container } = render(<App />);
-    expect(container.firstChild.style.height).toBe('926px');
+  it('renders all 4 tab buttons inside the tab bar wrapper', () => {
+    render(<App />);
+    const wrapper = screen.getByTestId('tab-bar-wrapper');
+    // Search within the tab bar only to avoid matching "📍 Map" activity buttons
+    const { getAllByRole } = within(wrapper);
+    const tabButtons = getAllByRole('button');
+    expect(tabButtons).toHaveLength(4);
+    const labels = tabButtons.map((b) => b.textContent);
+    expect(labels.some((t) => /itinerary/i.test(t))).toBe(true);
+    expect(labels.some((t) => /map/i.test(t))).toBe(true);
+    expect(labels.some((t) => /packing/i.test(t))).toBe(true);
+    expect(labels.some((t) => /vote/i.test(t))).toBe(true);
+  });
+
+  it('tab bar wrapper has overflow-hidden to clip any OS-level bleed-through', () => {
+    render(<App />);
+    const wrapper = screen.getByTestId('tab-bar-wrapper');
+    expect(wrapper.className).toContain('overflow-hidden');
   });
 });

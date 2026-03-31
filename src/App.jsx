@@ -1,29 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Header from './components/layout/Header.jsx';
 import TabNav from './components/layout/TabNav.jsx';
 import ItineraryView from './components/itinerary/ItineraryView.jsx';
 import MapView from './components/map/MapView.jsx';
 import PackingView from './components/packing/PackingView.jsx';
 import VoteView from './components/vote/VoteView.jsx';
-import { useStandaloneMode } from './hooks/useStandaloneMode.js';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('itinerary');
   const [mapTarget, setMapTarget] = useState(null);
-
-  // Use actual window.innerHeight to avoid iOS phantom-toolbar space in 100dvh
-  const [appHeight, setAppHeight] = useState(() => window.innerHeight);
-  useEffect(() => {
-    const update = () => setAppHeight(window.innerHeight);
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
-  }, []);
-
-  // True standalone = launched from Home Screen (iOS navigator.standalone OR display-mode: standalone)
-  // In standalone: we own the full screen, must pad for home indicator ourselves
-  // In browser: Safari positions content above its own chrome — no extra padding needed from us
-  const isStandalone = useStandaloneMode();
-  const tabBarBottomPad = isStandalone ? 'env(safe-area-inset-bottom, 0px)' : '0px';
 
   const handleShowOnMap = ({ lat, lng, zoom = 15, label }) => {
     setMapTarget({ lat, lng, zoom, label });
@@ -31,10 +16,13 @@ export default function App() {
   };
 
   return (
-    <div
-      className="flex flex-col bg-white overflow-hidden"
-      style={{ height: `${appHeight}px` }}
-    >
+    /*
+     * h-[100dvh]: with viewport-fit=cover this equals the full screen in
+     * standalone PWA mode and the content area above Safari toolbar in
+     * browser mode — no JS height needed.
+     */
+    <div className="h-[100dvh] flex flex-col bg-white overflow-hidden">
+
       {/* ── Fixed header at top ── */}
       <div className="flex-shrink-0">
         <Header />
@@ -65,17 +53,24 @@ export default function App() {
         )}
       </main>
 
-      {/* ── Fixed bottom tab bar ── */}
+      {/*
+       * Tab bar wrapper.
+       * padding-bottom: env(safe-area-inset-bottom, 0px) works correctly in
+       * both modes without any JS detection:
+       *   Browser mode  → 0px  (viewport sits above Safari toolbar; nothing unsafe below)
+       *   Standalone PWA → ~34px (home indicator; content must not render there)
+       */}
       <div
         data-testid="tab-bar-wrapper"
-        data-standalone={isStandalone ? 'true' : 'false'}
+        data-bottom-pad="env-safe-area"
         className="flex-shrink-0 grow-0 bg-white border-t border-slate-100 overflow-hidden"
-        style={{ paddingBottom: tabBarBottomPad }}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         <div className="max-w-2xl mx-auto">
           <TabNav activeTab={activeTab} setActiveTab={setActiveTab} />
         </div>
       </div>
+
     </div>
   );
 }

@@ -8,6 +8,16 @@ html, body, #root {
   overscroll-behavior: none;
 }
 
+/*
+ * Explicit white body background.
+ * With viewport-fit=cover the body can bleed through below a container that is
+ * shorter than the physical screen (e.g. when window.innerHeight < 100dvh on
+ * older iOS). Matching the tab-bar colour hides any such gap.
+ */
+body {
+  background-color: #ffffff;
+}
+
 /* ─── iOS tap highlight removal ─────────────────────────────────────────── */
 * {
   -webkit-tap-highlight-color: transparent;
