@@ -1,5 +1,15 @@
 import '@testing-library/jest-dom';
 
+// Default matchMedia stub — tests that need specific behaviour override it per-test
+if (!window.matchMedia) {
+  window.matchMedia = vi.fn((query) => ({
+    matches: false,
+    media: query,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }));
+}
+
 // Prevent real Firebase connections in tests
 vi.mock('../firebase.js', () => ({ db: {} }));
 
