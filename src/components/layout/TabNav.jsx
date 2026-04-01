@@ -3,6 +3,7 @@ const TABS = [
   { id: 'map',       label: 'Map',       icon: '🗺️' },
   { id: 'packing',   label: 'Packing',   icon: '🎒' },
   { id: 'vote',      label: 'Vote',      icon: '🗳️' },
+  { id: 'nearby',    label: 'Nearby',    icon: '📍' },
 ];
 
 export default function TabNav({ activeTab, setActiveTab }) {

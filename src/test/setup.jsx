@@ -39,6 +39,17 @@ vi.mock('../hooks/useWeather.js', () => ({
   useWeather: () => ({}),
 }));
 
+vi.mock('../hooks/useNearby.js', () => ({
+  useNearby: vi.fn(() => ({
+    status: 'done',
+    error: null,
+    coords: { lat: -33.8688, lng: 151.2093 },
+    restaurants: [],
+    attractions: [],
+    refresh: vi.fn(),
+  })),
+}));
+
 // Leaflet uses browser APIs not available in jsdom
 vi.mock('leaflet', () => ({
   default: {

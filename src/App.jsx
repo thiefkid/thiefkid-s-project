@@ -5,6 +5,7 @@ import ItineraryView from './components/itinerary/ItineraryView.jsx';
 import MapView from './components/map/MapView.jsx';
 import PackingView from './components/packing/PackingView.jsx';
 import VoteView from './components/vote/VoteView.jsx';
+import NearbyView from './components/nearby/NearbyView.jsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('itinerary');
@@ -59,6 +60,11 @@ export default function App() {
         {activeTab === 'vote' && (
           <div className="max-w-2xl mx-auto px-4 pb-4">
             <VoteView />
+          </div>
+        )}
+        {activeTab === 'nearby' && (
+          <div className="max-w-2xl mx-auto px-4 pb-4">
+            <NearbyView />
           </div>
         )}
       </main>

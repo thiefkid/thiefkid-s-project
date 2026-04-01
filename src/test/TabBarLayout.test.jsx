@@ -30,18 +30,19 @@ describe('Tab bar layout — iPhone 13 Pro Max PWA vs browser', () => {
     expect(wrapper.dataset.bottomPad).toBe('env-safe-area');
   });
 
-  it('renders all 4 tab buttons inside the tab bar wrapper', () => {
+  it('renders all 5 tab buttons inside the tab bar wrapper', () => {
     render(<App />);
     const wrapper = screen.getByTestId('tab-bar-wrapper');
     // Search within the tab bar only to avoid matching "📍 Map" activity buttons
     const { getAllByRole } = within(wrapper);
     const tabButtons = getAllByRole('button');
-    expect(tabButtons).toHaveLength(4);
+    expect(tabButtons).toHaveLength(5);
     const labels = tabButtons.map((b) => b.textContent);
     expect(labels.some((t) => /itinerary/i.test(t))).toBe(true);
     expect(labels.some((t) => /map/i.test(t))).toBe(true);
     expect(labels.some((t) => /packing/i.test(t))).toBe(true);
     expect(labels.some((t) => /vote/i.test(t))).toBe(true);
+    expect(labels.some((t) => /nearby/i.test(t))).toBe(true);
   });
 
   it('tab bar wrapper has overflow-hidden to clip any OS-level bleed-through', () => {
