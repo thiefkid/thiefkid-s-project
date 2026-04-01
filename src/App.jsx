@@ -9,10 +9,16 @@ import VoteView from './components/vote/VoteView.jsx';
 export default function App() {
   const [activeTab, setActiveTab] = useState('itinerary');
   const [mapTarget, setMapTarget] = useState(null);
+  const [scrollToLocation, setScrollToLocation] = useState(null);
 
   const handleShowOnMap = ({ lat, lng, zoom = 15, label }) => {
     setMapTarget({ lat, lng, zoom, label });
     setActiveTab('map');
+  };
+
+  const handleLocationClick = (locationId) => {
+    setScrollToLocation(locationId);
+    setActiveTab('itinerary');
   };
 
   return (
@@ -25,14 +31,18 @@ export default function App() {
 
       {/* ── Fixed header at top ── */}
       <div className="flex-shrink-0">
-        <Header />
+        <Header onLocationClick={handleLocationClick} />
       </div>
 
       {/* ── Scrollable content area ── */}
       <main className="flex-1 overflow-y-auto overscroll-contain min-h-0">
         {activeTab === 'itinerary' && (
           <div className="max-w-2xl mx-auto px-4 pb-4">
-            <ItineraryView onShowOnMap={handleShowOnMap} />
+            <ItineraryView
+              onShowOnMap={handleShowOnMap}
+              scrollToLocation={scrollToLocation}
+              onScrollConsumed={() => setScrollToLocation(null)}
+            />
           </div>
         )}
         {activeTab === 'map' && (

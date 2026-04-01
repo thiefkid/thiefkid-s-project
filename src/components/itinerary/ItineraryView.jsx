@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { parseISO, isPast, isToday } from 'date-fns';
 import { useTripData } from '../../hooks/useTripData.js';
 import { useTripMutations } from '../../hooks/useTripMutations.js';
@@ -10,7 +11,20 @@ const SYNC_BADGE = {
   error:   { dot: 'bg-red-400',   label: 'Offline' },
 };
 
-export default function ItineraryView({ onShowOnMap }) {
+export default function ItineraryView({ onShowOnMap, scrollToLocation, onScrollConsumed }) {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!scrollToLocation) return;
+    // Find the first DayCard matching the locationId and scroll to it
+    const target = containerRef.current?.querySelector(
+      `[data-location-id="${scrollToLocation}"]`
+    );
+    if (target) {
+      target.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+    }
+    onScrollConsumed?.();
+  }, [scrollToLocation, onScrollConsumed]);
   const { days, accommodations, status } = useTripData();
   const { addActivity, deleteActivity, updateActivity } = useTripMutations();
   const weatherByDate = useWeather(days);
@@ -34,7 +48,7 @@ export default function ItineraryView({ onShowOnMap }) {
   }
 
   return (
-    <div className="pt-4 space-y-3">
+    <div ref={containerRef} className="pt-4 space-y-3">
       {/* Sync status badge */}
       <div className="flex justify-end">
         <span className="flex items-center gap-1.5 text-xs text-slate-400">
@@ -53,6 +67,7 @@ export default function ItineraryView({ onShowOnMap }) {
             day={day}
             dayNumber={i + 1}
             defaultOpen={defaultOpen}
+            forceOpen={scrollToLocation === day.locationId}
             accommodations={accommodations}
             weather={weatherByDate[day.date]}
             onShowOnMap={onShowOnMap}

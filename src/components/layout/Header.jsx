@@ -3,7 +3,15 @@ import { format, parseISO, differenceInDays } from 'date-fns';
 
 const ROUTE = ['HKG', 'SYD', 'LST', 'HBT', 'MEL', 'HKG'];
 
-export default function Header() {
+// Map route codes to DAYS locationIds for scroll-to-day navigation
+const CODE_TO_LOCATION = {
+  SYD: 'syd',
+  LST: 'lst',
+  HBT: 'hbt',
+  MEL: 'mel',
+};
+
+export default function Header({ onLocationClick }) {
   const start = parseISO(TRIP_META.startDate);
   const end = parseISO(TRIP_META.endDate);
   const today = new Date();
@@ -46,16 +54,29 @@ export default function Header() {
       <div className="relative max-w-2xl mx-auto px-4 pt-3 pb-3">
         {/* Route pills */}
         <div className="flex items-center gap-1 flex-wrap mb-2">
-          {ROUTE.map((city, i) => (
-            <span key={i} className="flex items-center gap-1">
-              <span className="text-[11px] font-bold tracking-widest text-white/85 bg-white/10 border border-white/15 px-1.5 py-0.5 rounded-full">
-                {city}
+          {ROUTE.map((city, i) => {
+            const locId = CODE_TO_LOCATION[city];
+            const isClickable = locId && onLocationClick;
+            return (
+              <span key={i} className="flex items-center gap-1">
+                {isClickable ? (
+                  <button
+                    onClick={() => onLocationClick(locId)}
+                    className="text-[11px] font-bold tracking-widest text-white/85 bg-white/10 border border-white/15 px-1.5 py-0.5 rounded-full hover:bg-white/25 active:scale-95 transition-all"
+                  >
+                    {city}
+                  </button>
+                ) : (
+                  <span className="text-[11px] font-bold tracking-widest text-white/60 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded-full">
+                    {city}
+                  </span>
+                )}
+                {i < ROUTE.length - 1 && (
+                  <span className="text-teal-300/50 text-xs leading-none">›</span>
+                )}
               </span>
-              {i < ROUTE.length - 1 && (
-                <span className="text-teal-300/50 text-xs leading-none">›</span>
-              )}
-            </span>
-          ))}
+            );
+          })}
         </div>
 
         {/* Title + date on one line */}

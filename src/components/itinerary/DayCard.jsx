@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format, parseISO, isToday, isPast } from 'date-fns';
 import { LOCATIONS } from '../../data/tripData.js';
 import FlightSegment from './FlightSegment.jsx';
@@ -16,6 +16,7 @@ export default function DayCard({
   day,
   dayNumber,
   defaultOpen,
+  forceOpen,
   accommodations,
   weather,
   onShowOnMap,
@@ -25,6 +26,10 @@ export default function DayCard({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [modal, setModal] = useState(null); // null | { mode: 'add' } | { mode: 'edit', activity }
+
+  useEffect(() => {
+    if (forceOpen) setOpen(true);
+  }, [forceOpen]);
 
   const location = LOCATIONS.find((l) => l.id === day.locationId);
   const borderColor = location?.color ?? '#94a3b8';
@@ -49,6 +54,7 @@ export default function DayCard({
   return (
     <>
       <div
+        data-location-id={day.locationId}
         className={`bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden transition-opacity ${
           isPastDay ? 'opacity-60' : ''
         }`}
