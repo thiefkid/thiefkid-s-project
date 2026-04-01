@@ -12,6 +12,8 @@ const FIELD_MASK = [
   'places.userRatingCount',
   'places.location',
   'places.googleMapsUri',
+  'places.photos',
+  'places.editorialSummary',
 ].join(',');
 
 // ── Haversine distance (metres) ────────────────────────────────────────────
@@ -63,6 +65,8 @@ function normalizePlaces(apiPlaces, userLat, userLng) {
       lat: p.location?.latitude ?? 0,
       lng: p.location?.longitude ?? 0,
       googleMapsUrl: p.googleMapsUri ?? null,
+      photos: p.photos ?? [],
+      summary: p.editorialSummary?.text ?? null,
       distance: haversineMeters(
         userLat,
         userLng,
@@ -182,7 +186,7 @@ export function useNearby() {
       try {
         const [rawRestaurants, rawAttractions] = await Promise.all([
           fetchCategory(apiKey, lat, lng, ['restaurant']),
-          fetchCategory(apiKey, lat, lng, ['tourist_attraction', 'museum', 'art_gallery', 'park']),
+          fetchCategory(apiKey, lat, lng, ['tourist_attraction', 'park', 'night_club', 'live_music_venue', 'museum', 'art_gallery']),
         ]);
 
         if (cancelled) return;

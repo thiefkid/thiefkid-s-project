@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import { useNearby } from '../../hooks/useNearby.js';
+import { getPlacePhotoUrl } from './placePhoto.js';
+import PlaceDetailModal from './PlaceDetailModal.jsx';
 
 function formatDistance(meters) {
   if (meters < 1000) return `${Math.round(meters)}m`;
@@ -8,44 +11,57 @@ function formatDistance(meters) {
 function StarRating({ rating }) {
   const full = Math.round(rating);
   return (
-    <span className="text-xs font-medium text-amber-600">
+    <span className="text-xs font-medium text-amber-300">
       {'★'.repeat(full)}{'☆'.repeat(5 - full)}{' '}
-      {rating.toFixed(1)}
+      <span className="text-white/90">{rating.toFixed(1)}</span>
     </span>
   );
 }
 
-function PlaceCard({ place }) {
+function PlaceCard({ place, onSelect }) {
+  const photo = place.photos?.[0];
+  const hasPhoto = !!photo;
+
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <h3 className="font-semibold text-sm text-slate-800 leading-tight">{place.name}</h3>
-          {place.address && (
-            <p className="text-xs text-slate-400 mt-0.5 font-mono truncate">{place.address}</p>
-          )}
-          <div className="flex items-center gap-3 mt-1.5 flex-wrap">
-            <StarRating rating={place.rating} />
-            <span className="text-xs text-slate-400">
-              ({place.ratingCount.toLocaleString()})
-            </span>
-            <span className="text-xs text-slate-500 font-medium">
-              {formatDistance(place.distance)}
-            </span>
-          </div>
-        </div>
-        {place.googleMapsUrl && (
-          <a
-            href={place.googleMapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 text-blue-500 hover:text-blue-700 active:text-blue-800 transition-colors px-2 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 active:bg-blue-200 text-xs font-medium flex-shrink-0"
-          >
-            📍 Maps
-          </a>
+    <button
+      type="button"
+      onClick={() => onSelect(place)}
+      className="relative overflow-hidden rounded-xl h-48 w-full text-left cursor-pointer group focus:outline-none focus:ring-2 focus:ring-blue-400"
+    >
+      {/* Background image */}
+      {hasPhoto ? (
+        <img
+          src={getPlacePhotoUrl(photo.name, { maxWidth: 400, maxHeight: 400 })}
+          alt={place.name}
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-300 to-slate-400" />
+      )}
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+
+      {/* Content */}
+      <div className="absolute bottom-0 left-0 right-0 p-3.5">
+        <h3 className="font-semibold text-sm text-white leading-tight drop-shadow-sm">
+          {place.name}
+        </h3>
+        {place.summary && (
+          <p className="text-xs text-white/75 mt-0.5 line-clamp-1">{place.summary}</p>
         )}
+        <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+          <StarRating rating={place.rating} />
+          <span className="text-xs text-white/60">
+            ({place.ratingCount.toLocaleString()})
+          </span>
+          <span className="text-xs text-white/80 font-medium">
+            {formatDistance(place.distance)}
+          </span>
+        </div>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -60,6 +76,7 @@ function Spinner({ label }) {
 
 export default function NearbyView() {
   const { status, error, restaurants, attractions, refresh } = useNearby();
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   if (status === 'idle' || status === 'locating') {
     return <Spinner label="Getting your location…" />;
@@ -112,7 +129,7 @@ export default function NearbyView() {
           </h2>
           <div className="space-y-3">
             {restaurants.map((place, i) => (
-              <PlaceCard key={`r-${i}-${place.name}`} place={place} />
+              <PlaceCard key={`r-${i}-${place.name}`} place={place} onSelect={setSelectedPlace} />
             ))}
           </div>
         </section>
@@ -121,11 +138,11 @@ export default function NearbyView() {
       {attractions.length > 0 && (
         <section className={restaurants.length > 0 ? 'mt-6' : ''}>
           <h2 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-2">
-            <span>🏛️</span> Top Attractions
+            <span>🎯</span> Things to Do
           </h2>
           <div className="space-y-3">
             {attractions.map((place, i) => (
-              <PlaceCard key={`a-${i}-${place.name}`} place={place} />
+              <PlaceCard key={`a-${i}-${place.name}`} place={place} onSelect={setSelectedPlace} />
             ))}
           </div>
         </section>
@@ -140,6 +157,13 @@ export default function NearbyView() {
             Results cached · Tap to refresh
           </button>
         </div>
+      )}
+
+      {selectedPlace && (
+        <PlaceDetailModal
+          place={selectedPlace}
+          onClose={() => setSelectedPlace(null)}
+        />
       )}
     </div>
   );
